@@ -1,0 +1,1 @@
+Get-ChildItem -Path "c:\Users\91974\OneDrive\Desktop\showroomdbMANAGEMENT" -Filter *.class -Recurse | Remove-Item

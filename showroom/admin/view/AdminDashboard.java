@@ -32,8 +32,7 @@ public class AdminDashboard extends JFrame {
 
         // Sidebar buttons
         sidebar.add(createSidebarButton("🏍 Manage Bikes", () -> {
-            JOptionPane.showMessageDialog(null, "Opening Manage Bikes...");
-            // Replace with your actual ManageBikesView if available
+            new ManageBikesView();
         }));
 
         sidebar.add(createSidebarButton("👥 Manage Customers", () -> {
@@ -42,11 +41,11 @@ public class AdminDashboard extends JFrame {
         }));
 
         sidebar.add(createSidebarButton("👨‍💼 Manage Staff", () -> {
-            new StaffManagementView(); // Opens your Staff Management window
+            new StaffManagementView().setVisible(true); // Opens your Staff Management window
         }));
 
         sidebar.add(createSidebarButton("📦 Stock Management", () -> {
-            new StockManagementView(); // Opens your Stock Management window (replace with your class)
+            new StockManagementView().setVisible(true); // Opens your Stock Management window (replace with your class)
         }));
 
         sidebar.add(createSidebarButton("📊 Reports", () -> {
@@ -137,21 +136,5 @@ public class AdminDashboard extends JFrame {
     // For testing the dashboard directly
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AdminDashboard("Admin"));
-    }
-}
-
-// Placeholder for StockManagementView
-class StockManagementView extends JFrame {
-    public StockManagementView() {
-        setTitle("Stock Management - Bike Showroom Management");
-        setSize(800, 500);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-        JLabel label = new JLabel("Stock Management View", SwingConstants.CENTER);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        add(label);
-
-        setVisible(true);
     }
 }

@@ -2,7 +2,11 @@ package showroom;
 
 import java.awt.*;
 import javax.swing.*;
-import showroom.brands.*;
+import showroom.brands.Bajaj.view.BajajView;
+import showroom.brands.Hero.view.HeroView;
+import showroom.brands.Honda.view.HondaView;
+import showroom.brands.KTM.view.KTMView;
+import showroom.brands.RoyalEnfield.view.RoyalEnfieldView;
 
 public class MainPage extends JFrame {
 
@@ -75,19 +79,19 @@ public class MainPage extends JFrame {
     private void openCompanyDashboard(String company) {
         switch (company) {
             case "Honda":
-                new HondaPage().setVisible(true);
+                new HondaView().setVisible(true);
                 break;
             case "Hero":
-                new HeroPage().setVisible(true);
+                new HeroView().setVisible(true);
                 break;
             case "Royal Enfield":
-                new RoyalEnfieldPage().setVisible(true);
+                new RoyalEnfieldView().setVisible(true);
                 break;
             case "Bajaj":
-                new BajajPage().setVisible(true);
+                new BajajView().setVisible(true);
                 break;
             case "KTM":
-                new KTMPage().setVisible(true);
+                new KTMView().setVisible(true);
                 break;
             default:
                 JOptionPane.showMessageDialog(this, "Invalid selection");

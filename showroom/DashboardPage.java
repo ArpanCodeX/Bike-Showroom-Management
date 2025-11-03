@@ -7,7 +7,6 @@ import java.awt.event.*;
 import javax.swing.*;
 import showroom.auth.view.LoginView;
 import showroom.auth.view.RegistrationView;
-import showroom.chat.view.ChatbotPage;
 
 public class DashboardPage extends JFrame {
 
@@ -54,11 +53,9 @@ public class DashboardPage extends JFrame {
 
         JButton signInButton = createGradientButton("Sign In", new Color(255, 103, 31));
         JButton createAccountButton = createGradientButton("Create Account", Color.BLACK);
-        JButton chatbotButton = createGradientButton("Chat Assistant", new Color(255, 103, 31));
 
         buttonsPanel.add(signInButton);
         buttonsPanel.add(createAccountButton);
-        buttonsPanel.add(chatbotButton);
 
         // Stats Panel
         JPanel statsPanel = new JPanel(new GridLayout(1, 3, 20, 0));
@@ -83,12 +80,6 @@ public class DashboardPage extends JFrame {
         // Actions
         signInButton.addActionListener(this::navigateToLogin);
         createAccountButton.addActionListener(this::navigateToRegistration);
-        chatbotButton.addActionListener(this::navigateToChatbot);
-    }
-
-    private void navigateToChatbot(ActionEvent e) {
-        new ChatbotPage().setVisible(true);
-        dispose();
     }
 
     private void navigateToLogin(ActionEvent e) {

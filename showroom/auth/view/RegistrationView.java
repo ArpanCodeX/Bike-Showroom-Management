@@ -79,6 +79,26 @@ public class RegistrationView extends JFrame {
                 registerButton.setBackground(accentColor);
             }
         });
+
+        // Enter key listener for pin code field to trigger registration
+        pinCodeField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    // Check if all fields are filled (not empty and not placeholder text)
+                    if (!nameField.getText().isEmpty() && !nameField.getText().equals("Enter your full name") &&
+                        !phoneField.getText().isEmpty() && !phoneField.getText().equals("Enter 10-digit mobile number") &&
+                        !emailField.getText().isEmpty() && !emailField.getText().equals("Enter your email") &&
+                        passwordField.getPassword().length > 0 &&
+                        !cityField.getText().isEmpty() && !cityField.getText().equals("City") &&
+                        !districtField.getText().isEmpty() && !districtField.getText().equals("District") &&
+                        !stateField.getText().isEmpty() && !stateField.getText().equals("State") &&
+                        !pinCodeField.getText().isEmpty() && !pinCodeField.getText().equals("Pin Code")) {
+                        registerButton.doClick();
+                    }
+                }
+            }
+        });
         
         // --- Setup focus border effects for text fields ---
         Border defaultBorder = BorderFactory.createCompoundBorder(

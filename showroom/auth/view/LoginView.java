@@ -78,6 +78,18 @@ public class LoginView extends JFrame {
             }
         });
 
+        // Enter key listener for password field to trigger login
+        passwordField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    if (!emailField.getText().isEmpty() && passwordField.getPassword().length > 0) {
+                        loginButton.doClick();
+                    }
+                }
+            }
+        });
+
         // Focus border effects
         Border defaultBorder = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(80, 80, 80)),

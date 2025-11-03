@@ -1,6 +1,7 @@
 package showroom.auth.dao;
 import shadow.org.bson.Document;
 import showroom.auth.model.User;
+import showroom.core.DatabaseConfig;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoException;
@@ -9,9 +10,9 @@ import com.mongodb.ServerApiVersion;
 import com.mongodb.client.*;
 
 public class UserDAO {
-    private static final String CONNECTION_STRING = "mongodb://localhost:27017";
-    private static final String DATABASE_NAME = "Bikeshowroom";
-    private static final String COLLECTION_NAME = "users";
+    private static final String CONNECTION_STRING = DatabaseConfig.CONNECTION_STRING;
+    private static final String DATABASE_NAME = DatabaseConfig.DATABASE_NAME;
+    private static final String COLLECTION_NAME = DatabaseConfig.USERS_COLLECTION;
 
     private MongoClient mongoClient;
     private MongoDatabase database;

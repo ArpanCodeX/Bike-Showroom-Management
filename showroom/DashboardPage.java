@@ -1,5 +1,3 @@
-
-
 package showroom;
 
 import java.awt.*;

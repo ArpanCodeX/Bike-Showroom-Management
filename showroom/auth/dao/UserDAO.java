@@ -1,5 +1,5 @@
 package showroom.auth.dao;
-import shadow.org.bson.Document;
+import org.bson.Document;
 import showroom.auth.model.User;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;

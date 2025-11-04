@@ -1,0 +1,288 @@
+package showroom;
+
+import java.awt.*;
+import javax.swing.*;
+import showroom.brands.Bajaj.controller.BajajController;
+import showroom.brands.Hero.controller.HeroController;
+import showroom.brands.Honda.controller.HondaController;
+import showroom.brands.KTM.controller.KTMController;
+import showroom.brands.RoyalEnfield.controller.RoyalEnfieldController;
+import showroom.brands.Bajaj.model.BajajBike;
+import showroom.brands.Hero.model.HeroBike;
+import showroom.brands.Honda.model.HondaBike;
+import showroom.brands.KTM.model.KTMBike;
+import showroom.brands.RoyalEnfield.model.RoyalEnfieldBike;
+import java.util.List;
+
+public class MainPage extends JFrame {
+    private final Color PRIMARY_COLOR = new Color(255, 103, 31); // Orange
+    private final Color SECONDARY_COLOR = new Color(26, 26, 26); // Dark Black
+    private final Color BACKGROUND_COLOR = new Color(20, 20, 20); // Very Dark
+    private final Color TEXT_COLOR = Color.WHITE;
+    
+    private JComboBox<String> brandSelector;
+    private JPanel contentPanel;
+    private BajajController bajajController;
+    private HeroController heroController;
+    private HondaController hondaController;
+    private KTMController ktmController;
+    private RoyalEnfieldController reController;
+
+    public MainPage(String username) {
+        initializeControllers();
+        initializeUI();
+    }
+
+    private void initializeControllers() {
+        this.bajajController = new BajajController();
+        this.heroController = new HeroController();
+        this.hondaController = new HondaController();
+        this.ktmController = new KTMController();
+        this.reController = new RoyalEnfieldController();
+    }
+
+    private void initializeUI() {
+        setTitle("Bike Showroom - Browse Bikes");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setLayout(new BorderLayout(0, 0));
+        getContentPane().setBackground(BACKGROUND_COLOR);
+
+        // Header Panel with Dropdown
+        JPanel headerPanel = new JPanel(new BorderLayout(20, 0));
+        headerPanel.setBackground(SECONDARY_COLOR);
+        headerPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, PRIMARY_COLOR));
+        headerPanel.setPreferredSize(new Dimension(0, 70));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+
+        // Title
+        JLabel titleLabel = new JLabel("🏍 Browse Bikes");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        titleLabel.setForeground(PRIMARY_COLOR);
+
+        // Dropdown Panel
+        JPanel dropdownPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        dropdownPanel.setBackground(SECONDARY_COLOR);
+
+        JLabel selectLabel = new JLabel("Select Brand:");
+        selectLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        selectLabel.setForeground(TEXT_COLOR);
+
+        String[] brands = {"Bajaj", "Hero", "Honda", "KTM", "Royal Enfield"};
+        brandSelector = new JComboBox<>(brands);
+        brandSelector.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        brandSelector.setBackground(new Color(40, 40, 40));
+        brandSelector.setForeground(TEXT_COLOR);
+        brandSelector.setPreferredSize(new Dimension(150, 35));
+        brandSelector.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        brandSelector.addActionListener(e -> loadBrandBikes());
+
+        dropdownPanel.add(selectLabel);
+        dropdownPanel.add(brandSelector);
+
+        headerPanel.add(titleLabel, BorderLayout.WEST);
+        headerPanel.add(dropdownPanel, BorderLayout.EAST);
+
+        // Content Panel
+        contentPanel = new JPanel();
+        contentPanel.setBackground(BACKGROUND_COLOR);
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setBackground(BACKGROUND_COLOR);
+        scrollPane.getViewport().setBackground(BACKGROUND_COLOR);
+        scrollPane.setBorder(null);
+
+        add(headerPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+
+        setVisible(true);
+        
+        // Load initial bikes
+        loadBrandBikes();
+    }
+
+    private void loadBrandBikes() {
+        contentPanel.removeAll();
+        String selectedBrand = (String) brandSelector.getSelectedItem();
+
+        switch (selectedBrand) {
+            case "Bajaj":
+                displayBikes(bajajController.getAllBikes());
+                break;
+            case "Hero":
+                displayBikes(heroController.getAllBikes());
+                break;
+            case "Honda":
+                displayBikes(hondaController.getAllBikes());
+                break;
+            case "KTM":
+                displayBikes(ktmController.getAllBikes());
+                break;
+            case "Royal Enfield":
+                displayBikes(reController.getAllBikes());
+                break;
+        }
+
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void displayBikes(List<?> bikes) {
+        if (bikes.isEmpty()) {
+            JLabel noDataLabel = new JLabel("No bikes available for this brand");
+            noDataLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            noDataLabel.setForeground(new Color(150, 150, 150));
+            contentPanel.add(noDataLabel);
+            return;
+        }
+
+        for (Object bike : bikes) {
+            contentPanel.add(createBikeCard(bike));
+            contentPanel.add(Box.createVerticalStrut(15));
+        }
+    }
+
+    private JPanel createBikeCard(Object bike) {
+        JPanel card = new JPanel(new BorderLayout(15, 15));
+        card.setBackground(SECONDARY_COLOR);
+        card.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+
+        // Extract bike information based on type
+        String modelNameTemp = "";
+        String priceTemp = "";
+        String engineTemp = "";
+        String fuelTemp = "";
+        String mileageTemp = "";
+        String colorTemp = "";
+
+        if (bike instanceof BajajBike) {
+            BajajBike b = (BajajBike) bike;
+            modelNameTemp = b.getModelName();
+            priceTemp = "₹" + b.getPrice();
+            engineTemp = b.getEngineCapacity();
+            fuelTemp = b.getFuelType();
+            mileageTemp = b.getMileage() + " km/l";
+            colorTemp = b.getColor();
+        } else if (bike instanceof HeroBike) {
+            HeroBike b = (HeroBike) bike;
+            modelNameTemp = b.getModelName();
+            priceTemp = "₹" + b.getPrice();
+            engineTemp = b.getEngineCapacity();
+            fuelTemp = b.getFuelType();
+            mileageTemp = b.getMileage() + " km/l";
+            colorTemp = b.getColor();
+        } else if (bike instanceof HondaBike) {
+            HondaBike b = (HondaBike) bike;
+            modelNameTemp = b.getModelName();
+            priceTemp = "₹" + b.getPrice();
+            engineTemp = b.getEngineCapacity();
+            fuelTemp = b.getFuelType();
+            mileageTemp = b.getMileage() + " km/l";
+            colorTemp = b.getColor();
+        } else if (bike instanceof KTMBike) {
+            KTMBike b = (KTMBike) bike;
+            modelNameTemp = b.getModelName();
+            priceTemp = "₹" + b.getPrice();
+            engineTemp = b.getEngineCapacity();
+            fuelTemp = b.getFuelType();
+            mileageTemp = b.getMileage() + " km/l";
+            colorTemp = b.getColor();
+        } else if (bike instanceof RoyalEnfieldBike) {
+            RoyalEnfieldBike b = (RoyalEnfieldBike) bike;
+            modelNameTemp = b.getModelName();
+            priceTemp = "₹" + b.getPrice();
+            engineTemp = b.getEngineCapacity();
+            fuelTemp = b.getFuelType();
+            mileageTemp = b.getMileage() + " km/l";
+            colorTemp = b.getColor();
+        } else {
+            modelNameTemp = "Unknown";
+            priceTemp = "N/A";
+            engineTemp = "N/A";
+            fuelTemp = "N/A";
+            mileageTemp = "N/A";
+            colorTemp = "N/A";
+        }
+
+        final String modelName = modelNameTemp;
+        final String price = priceTemp;
+        final String engine = engineTemp;
+        final String fuel = fuelTemp;
+        final String mileage = mileageTemp;
+        final String color = colorTemp;
+
+        // Left Panel - Info
+        JPanel infoPanel = new JPanel(new GridLayout(3, 2, 10, 8));
+        infoPanel.setOpaque(false);
+
+        JLabel modelLabel = new JLabel("Model: " + modelName);
+        modelLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        modelLabel.setForeground(PRIMARY_COLOR);
+
+        JLabel priceLabel = new JLabel(price);
+        priceLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        priceLabel.setForeground(new Color(100, 200, 100));
+
+        JLabel engineLabel = new JLabel("Engine: " + engine);
+        engineLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        engineLabel.setForeground(TEXT_COLOR);
+
+        JLabel fuelLabel = new JLabel("Fuel: " + fuel);
+        fuelLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        fuelLabel.setForeground(TEXT_COLOR);
+
+        JLabel mileageLabel = new JLabel("Mileage: " + mileage);
+        mileageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        mileageLabel.setForeground(TEXT_COLOR);
+
+        JLabel colorLabel = new JLabel("Color: " + color);
+        colorLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        colorLabel.setForeground(TEXT_COLOR);
+
+        infoPanel.add(modelLabel);
+        infoPanel.add(priceLabel);
+        infoPanel.add(engineLabel);
+        infoPanel.add(fuelLabel);
+        infoPanel.add(mileageLabel);
+        infoPanel.add(colorLabel);
+
+        // Right Panel - Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        buttonPanel.setOpaque(false);
+
+        JButton viewButton = new JButton("View Details");
+        viewButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        viewButton.setBackground(PRIMARY_COLOR);
+        viewButton.setForeground(Color.BLACK);
+        viewButton.setFocusPainted(false);
+        viewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        viewButton.setPreferredSize(new Dimension(120, 35));
+        viewButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "Model: " + modelName + "\n" + price));
+
+        JButton addButton = new JButton("Add to Favorites");
+        addButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        addButton.setBackground(new Color(255, 140, 60));
+        addButton.setForeground(Color.BLACK);
+        addButton.setFocusPainted(false);
+        addButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        addButton.setPreferredSize(new Dimension(140, 35));
+        addButton.addActionListener(e -> JOptionPane.showMessageDialog(null, modelName + " added to favorites!"));
+
+        buttonPanel.add(viewButton);
+        buttonPanel.add(addButton);
+
+        card.add(infoPanel, BorderLayout.CENTER);
+        card.add(buttonPanel, BorderLayout.EAST);
+
+        return card;
+    }
+}
+
+
+
